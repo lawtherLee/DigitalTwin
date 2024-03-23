@@ -1,0 +1,67 @@
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
+let scene, camera, renderer, control, css2Renderer
+
+// 初始化 3d 基本环境
+function init() {
+  scene = new THREE.Scene()
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+  camera.position.set(-148, 55, -101)
+
+  // 创建渲染器
+  renderer = new THREE.WebGLRenderer({ antialias: true })
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+  // 创建2D渲染器
+  css2Renderer = new CSS2DRenderer()
+  css2Renderer.setSize(window.innerWidth, window.innerHeight)
+  css2Renderer.domElement.style.position = 'absolute'
+  css2Renderer.domElement.style.top = '0px'
+  css2Renderer.domElement.style.pointerEvents = 'none'
+
+  // DOM 添加到页面
+  const canvas = document.getElementById('canvas')
+  canvas.appendChild(renderer.domElement)
+  canvas.appendChild(css2Renderer.domElement)
+
+  // 轨道控制器
+  control = new OrbitControls(camera, renderer.domElement)
+  control.update()
+
+  // 坐标轴
+  const axesHelper = new THREE.AxesHelper(1500)
+  scene.add(axesHelper)
+}
+
+// 渲染循环
+function renderLoop() {
+  // 这里不再调用轨道控制器 update 方法，会影响摄像机 lookAt
+  renderer.render(scene, camera)
+  css2Renderer.render(scene, camera)
+  requestAnimationFrame(renderLoop)
+}
+
+// 灯光
+function createLight() {
+  // 基础光-环境光
+  const ambientLight = new THREE.AmbientLight('#fff', 3)
+  scene.add(ambientLight)
+}
+
+// 适配
+window.addEventListener('resize', function () {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  css2Renderer.setSize(window.innerWidth, window.innerHeight);
+})
+
+// 启动
+window.addEventListener('DOMContentLoaded', function () {
+  init()
+  createLight()
+
+  renderLoop()
+})
+
