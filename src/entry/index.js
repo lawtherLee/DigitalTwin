@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { loadManager } from "@/model/loadManager.js";
 import { City } from "@/model/City.js";
+import { Ship } from "@/model/Ship.js";
 let scene, camera, renderer, control, css2Renderer;
 
 // 初始化 3d 基本环境
@@ -73,6 +74,11 @@ window.addEventListener("DOMContentLoaded", function () {
     modelList.forEach((model) => {
       if (model.url === "fbx/city.fbx") {
         new City(model.model, scene, camera, control);
+      } else if (model.url === "gltf/ship.glb") {
+        const ship = new Ship(model.model, scene, camera, control);
+        ship.model.position.set(150, 0, -80);
+        ship.model.rotation.set(0, -Math.PI / 2, 0);
+        ship.model.scale.set(100, 100, 100);
       }
     });
   });
