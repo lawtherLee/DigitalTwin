@@ -1,5 +1,6 @@
 import { BaseModel } from "@/model/BaseModel.js";
 import * as THREE from "three";
+import { EdgesLine } from "@/effect/EdgesLine.js";
 export class City extends BaseModel {
   init() {
     this.scene.add(this.model);
@@ -14,12 +15,15 @@ export class City extends BaseModel {
     });
     // 外围城市建筑
     const periphery = new THREE.MeshBasicMaterial({
-      color: "green",
+      color: "#a4ccee",
       transparent: true,
     });
     this.model.traverse((model) => {
       // 隐藏建筑名字
-      if (model.name === "Text") model.visible = false;
+      if (model.name === "Text") {
+        model.visible = false;
+        return;
+      }
       // 排除地板和河水物体
       if (
         model.name !== "Shanghai-09-Floor" &&
@@ -35,9 +39,11 @@ export class City extends BaseModel {
         ) {
           // 周围建筑
           model.material = periphery;
+          new EdgesLine(this.scene, model, new THREE.Color("#666"));
         } else {
           // 中心建筑
           model.material = centerMaterial;
+          new EdgesLine(this.scene, model, new THREE.Color("#666"));
         }
       }
     });
