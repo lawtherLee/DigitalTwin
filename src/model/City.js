@@ -2,6 +2,7 @@ import { BaseModel } from "@/model/BaseModel.js";
 import * as THREE from "three";
 import { EdgesLine } from "@/effect/EdgesLine.js";
 import { modifyCityDefaultMaterial } from "@/shader/modifyCityMaterial.js";
+import { CityWater } from "@/effect/CityWater.js";
 export class City extends BaseModel {
   init() {
     this.scene.add(this.model);
@@ -48,6 +49,11 @@ export class City extends BaseModel {
           new EdgesLine(this.scene, model, new THREE.Color("red"));
           modifyCityDefaultMaterial(model, true);
         }
+      }
+      // 针对水物体单独处理
+      if (model.name === "Shanghai-08-River") {
+        model.visible = false;
+        new CityWater(model, this.scene);
       }
     });
   }
