@@ -1,6 +1,7 @@
 import { BaseModel } from "@/model/BaseModel.js";
 import * as THREE from "three";
 import { EdgesLine } from "@/effect/EdgesLine.js";
+import { modifyCityDefaultMaterial } from "@/shader/modifyCityMaterial.js";
 export class City extends BaseModel {
   init() {
     this.scene.add(this.model);
@@ -40,10 +41,12 @@ export class City extends BaseModel {
           // 周围建筑
           model.material = periphery;
           new EdgesLine(this.scene, model, new THREE.Color("#666"));
+          modifyCityDefaultMaterial(model, false);
         } else {
           // 中心建筑
           model.material = centerMaterial;
-          new EdgesLine(this.scene, model, new THREE.Color("#666"));
+          new EdgesLine(this.scene, model, new THREE.Color("red"));
+          modifyCityDefaultMaterial(model, true);
         }
       }
     });
