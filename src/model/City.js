@@ -5,6 +5,7 @@ import { modifyCityDefaultMaterial } from "@/shader/modifyCityMaterial.js";
 import { CityWater } from "@/effect/CityWater.js";
 import { getBoxCenter } from "@/utils/getBoxCenter.js";
 import { Fire } from "@/effect/Fire.js";
+import { FireBall } from "@/effect/FireBall.js";
 export class City extends BaseModel {
   init() {
     this.scene.add(this.model);
@@ -66,5 +67,6 @@ export class City extends BaseModel {
     const build = this.model.getObjectByName(buildName);
     const { center, size } = getBoxCenter(build);
     new Fire(this.scene, center, size);
+    new FireBall(this.scene, center);
   }
 }
