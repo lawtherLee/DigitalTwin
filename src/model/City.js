@@ -6,6 +6,7 @@ import { CityWater } from "@/effect/CityWater.js";
 import { getBoxCenter } from "@/utils/getBoxCenter.js";
 import { Fire } from "@/effect/Fire.js";
 import { FireBall } from "@/effect/FireBall.js";
+import { BuildInfo } from "@/dom/BuildInfo.js";
 export class City extends BaseModel {
   init() {
     this.scene.add(this.model);
