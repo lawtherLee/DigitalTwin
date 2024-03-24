@@ -5,6 +5,7 @@ import { loadManager } from "@/model/loadManager.js";
 import { City } from "@/model/City.js";
 import { Ship } from "@/model/Ship.js";
 import { Sky } from "@/environment/Sky.js";
+import { EffectManager } from "@/utils/EffectManager.js";
 let scene, camera, renderer, control, css2Renderer;
 
 // 初始化 3d 基本环境
@@ -44,10 +45,12 @@ function init() {
 }
 
 // 渲染循环
-function renderLoop() {
+function renderLoop(t) {
   // 这里不再调用轨道控制器 update 方法，会影响摄像机 lookAt
   renderer.render(scene, camera);
   css2Renderer.render(scene, camera);
+  // 遍历所有要做动效的实例物体内置的onTick方法
+  EffectManager.getInstance().tickForEach(t);
   requestAnimationFrame(renderLoop);
 }
 

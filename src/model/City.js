@@ -7,6 +7,7 @@ import { getBoxCenter } from "@/utils/getBoxCenter.js";
 import { Fire } from "@/effect/Fire.js";
 import { FireBall } from "@/effect/FireBall.js";
 import { BuildInfo } from "@/dom/BuildInfo.js";
+import { EffectManager } from "@/utils/EffectManager.js";
 export class City extends BaseModel {
   init() {
     this.scene.add(this.model);
@@ -58,7 +59,8 @@ export class City extends BaseModel {
       // 针对水物体单独处理
       if (model.name === "Shanghai-08-River") {
         model.visible = false;
-        new CityWater(model, this.scene);
+        const theWater = new CityWater(model, this.scene);
+        EffectManager.getInstance().addObj(theWater);
       }
     });
   }
