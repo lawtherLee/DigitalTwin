@@ -3,10 +3,13 @@ import * as THREE from "three";
 import { EdgesLine } from "@/effect/EdgesLine.js";
 import { modifyCityDefaultMaterial } from "@/shader/modifyCityMaterial.js";
 import { CityWater } from "@/effect/CityWater.js";
+import { getBoxCenter } from "@/utils/getBoxCenter.js";
+import { Fire } from "@/effect/Fire.js";
 export class City extends BaseModel {
   init() {
     this.scene.add(this.model);
     this.initEffect();
+    this.initFire("01-shanghaizhongxindasha");
   }
   // 初始化城市效果
   initEffect() {
@@ -56,5 +59,12 @@ export class City extends BaseModel {
         new CityWater(model, this.scene);
       }
     });
+  }
+
+  // 创建火灾标记
+  initFire(buildName) {
+    const build = this.model.getObjectByName(buildName);
+    const { center, size } = getBoxCenter(build);
+    new Fire(this.scene, center, size);
   }
 }
