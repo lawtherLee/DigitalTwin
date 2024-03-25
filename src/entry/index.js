@@ -93,6 +93,7 @@ window.addEventListener("DOMContentLoaded", function () {
         ship.model.position.set(150, 0, -80);
         ship.model.rotation.set(0, -Math.PI / 2, 0);
         ship.model.scale.set(100, 100, 100);
+        EffectManager.getInstance().addObj(ship);
       }
     });
   });

@@ -25,7 +25,7 @@ export class CityWater {
       sunDirection: new THREE.Vector3(), // 阳光方向
       sunColor: 0xffffff, // 阳光颜色
       waterColor: new THREE.Color("#1e90ff"), // 水颜色
-      distortionScale: 1, // 水倒影分散度（值大越分散）
+      distortionScale: 4, // 水倒影分散度（值大越分散）
     });
     this.model.rotation.x = -Math.PI / 2; // 默认模型是垂直于 x 轴，所以翻转
     this.scene.add(this.model); // 物体模型添加到场景中
