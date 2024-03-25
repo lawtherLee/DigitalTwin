@@ -8,11 +8,20 @@ import { Fire } from "@/effect/Fire.js";
 import { FireBall } from "@/effect/FireBall.js";
 import { BuildInfo } from "@/dom/BuildInfo.js";
 import { EffectManager } from "@/utils/EffectManager.js";
+import { ClickHandler } from "@/utils/ClickHandler.js";
 export class City extends BaseModel {
   init() {
     this.scene.add(this.model);
+    this.buildNameObj = {
+      // 模型名字和建筑显示名字对应关系
+      "01-shanghaizhongxindasha": "上海中心大厦",
+      "02-huanqiujinrongzhongxin": "环球金融中心",
+      "03-jinmaodasha": "金茂大厦",
+      "04-dongfangmingzhu": "东方明珠",
+    };
     this.initEffect();
     this.initFire("01-shanghaizhongxindasha");
+    this.bindClick();
   }
   // 初始化城市效果
   initEffect() {
@@ -71,5 +80,22 @@ export class City extends BaseModel {
     const { center, size } = getBoxCenter(build);
     new Fire(this.scene, center, size);
     new FireBall(this.scene, center);
+  }
+
+  // 中心4个建筑绑定点击事件
+  bindClick() {
+    Object.keys(this.buildNameObj).forEach((key) => {
+      const build = this.model.getObjectByName(key);
+      ClickHandler.getInstance().addMesh(build, (object) => {
+        const { center } = getBoxCenter(object);
+        new BuildInfo(this.scene, center, {
+          squareMeters: "500",
+          name: this.buildNameObj[object.name],
+          officesRemain: 500,
+          accommodate: 500,
+          parkingRemain: 88,
+        });
+      });
+    });
   }
 }

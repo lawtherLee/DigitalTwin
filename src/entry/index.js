@@ -6,6 +6,7 @@ import { City } from "@/model/City.js";
 import { Ship } from "@/model/Ship.js";
 import { Sky } from "@/environment/Sky.js";
 import { EffectManager } from "@/utils/EffectManager.js";
+import { ClickHandler } from "@/utils/ClickHandler.js";
 let scene, camera, renderer, control, css2Renderer;
 
 // 初始化 3d 基本环境
@@ -73,6 +74,9 @@ window.addEventListener("resize", function () {
 window.addEventListener("DOMContentLoaded", function () {
   init();
   createLight();
+
+  // 注册光线投射
+  ClickHandler.getInstance().init(camera);
 
   // 初始化天空
   new Sky(scene).setBack("textures/sky/", [
