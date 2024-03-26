@@ -79,7 +79,9 @@ export class City extends BaseModel {
     const build = this.model.getObjectByName(buildName);
     const { center, size } = getBoxCenter(build);
     new Fire(this.scene, center, size);
-    new FireBall(this.scene, center);
+    const ball = new FireBall(this.scene, center);
+    // 注册动效管理
+    EffectManager.getInstance().addObj(ball);
   }
 
   // 中心4个建筑绑定点击事件

@@ -5,6 +5,9 @@ export class FireBall {
     this.scene = scene;
     this.center = center;
 
+    this.nowMesh = {}; // 半球体对象
+    this.nowScale = 0; // 当前放大的比例
+
     this.init();
   }
   init() {
@@ -25,5 +28,15 @@ export class FireBall {
     const sphere = new THREE.Mesh(geometry, material);
     sphere.position.set(this.center.x, 0, this.center.z);
     this.scene.add(sphere);
+    this.nowMesh = sphere;
+  }
+  // 动效
+  onTick() {
+    if (this.nowScale < 1) {
+      this.nowScale += 0.01;
+      this.nowMesh.scale.set(this.nowScale, this.nowScale, this.nowScale);
+    } else {
+      this.nowScale = 0;
+    }
   }
 }
