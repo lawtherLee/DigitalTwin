@@ -100,6 +100,11 @@ window.addEventListener("DOMContentLoaded", function () {
         ship.model.rotation.set(0, -Math.PI / 2, 0);
         ship.model.scale.set(100, 100, 100);
         EffectManager.getInstance().addObj(ship);
+        // 订阅改变摄像机跟随游船移动的事件
+        EventBus.getInstance().on("mode-roaming", (isOpen) => {
+          ship.control.enabled = !isOpen; // 关闭/开启轨道控制器
+          ship.isMoveCamera = isOpen; // 摄像机跟随移动
+        });
       }
     });
 

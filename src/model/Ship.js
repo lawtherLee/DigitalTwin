@@ -6,6 +6,8 @@ export class Ship extends BaseModel {
     this.scene.add(this.model);
     this.pointIndex = 0; // 保存当前游船所在位置坐标的索引哎
     this.generatorMovePath();
+
+    this.isMoveCamera = false;
   }
   // 生成游船行进的路线坐标点集合
   generatorMovePath() {
@@ -98,6 +100,13 @@ export class Ship extends BaseModel {
   // 游船行进方法 - 切换坐标的位置
   onTick() {
     if (this.pointIndex < this.pointArr.length - 1) {
+      const { x, y, z } = this.pointArr[this.pointIndex + 1];
+      if (this.isMoveCamera) {
+        this.camera.lookAt(x, y + 20, z);
+        this.camera.position.set(x, y + 20, z);
+      }
+      // 游船移动
+      // 取出坐标设置给模型对象
       this.model.position.copy(this.pointArr[this.pointIndex]);
       // 确保船头朝向下一个坐标点的位置
       this.model.lookAt(this.pointArr[this.pointIndex + 1]);

@@ -27,12 +27,12 @@ export class City extends BaseModel {
   initEffect() {
     // 中心城市建筑
     const centerMaterial = new THREE.MeshBasicMaterial({
-      color: "red",
+      color: 0xa8cded,
       transparent: true,
     });
     // 外围城市建筑
     const periphery = new THREE.MeshBasicMaterial({
-      color: "#a4ccee",
+      color: 0xa8cded,
       transparent: true,
     });
     this.model.traverse((model) => {
@@ -61,7 +61,7 @@ export class City extends BaseModel {
         } else {
           // 中心建筑
           model.material = centerMaterial;
-          new EdgesLine(this.scene, model, new THREE.Color("red"));
+          new EdgesLine(this.scene, model, new THREE.Color("#00ffff"));
           modifyCityDefaultMaterial(model, true);
         }
       }
