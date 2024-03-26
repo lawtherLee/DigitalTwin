@@ -7,6 +7,8 @@ import { Ship } from "@/model/Ship.js";
 import { Sky } from "@/environment/Sky.js";
 import { EffectManager } from "@/utils/EffectManager.js";
 import { ClickHandler } from "@/utils/ClickHandler.js";
+import { Fly } from "@/model/Fly.js";
+import { EventBus } from "@/utils/EventBus.js";
 let scene, camera, renderer, control, css2Renderer;
 
 // 初始化 3d 基本环境
@@ -99,6 +101,21 @@ window.addEventListener("DOMContentLoaded", function () {
         ship.model.scale.set(100, 100, 100);
         EffectManager.getInstance().addObj(ship);
       }
+    });
+
+    // 生成飞行器对象
+    const meshObj = new THREE.Mesh(
+      new THREE.BoxGeometry(5, 5, 5),
+      new THREE.MeshBasicMaterial({ color: "lightblue" }),
+    );
+    const fly = new Fly(meshObj, scene, camera, control);
+    // 注册动效
+    EffectManager.getInstance().addObj(fly);
+    // 注册事件 - 控制摄像机是否移动鸟瞰
+    EventBus.getInstance().on("mode-topView", (isOpen) => {
+      // 鸟瞰时禁用轨道控制器
+      fly.control.enabled = !isOpen;
+      fly.isCameraMove = isOpen;
     });
   });
 
