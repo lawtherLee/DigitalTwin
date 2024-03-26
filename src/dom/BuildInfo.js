@@ -7,6 +7,8 @@ export class BuildInfo {
     this.center = center;
     this.dataObj = dataObj;
 
+    this.list = []; // 用来保存名字信息的2个2d物体
+
     this.createNameDiv();
     this.createInfoDiv();
   }
@@ -19,11 +21,13 @@ export class BuildInfo {
     const nameObject = new CSS2DObject(nameDiv);
     nameObject.position.set(this.center.x, this.center.y + 10, this.center.z);
     this.scene.add(nameObject);
+    this.list.push(nameObject);
   }
 
   // 建筑信息的2D物体
   createInfoDiv() {
     const infoDiv = document.querySelector("#tag-2");
+    infoDiv.style.pointerEvents = "all";
     const { squareMeters, accommodate, officesRemain, parkingRemain } =
       this.dataObj;
     infoDiv.innerHTML = `
@@ -36,5 +40,16 @@ export class BuildInfo {
     const infoObject = new CSS2DObject(infoDiv);
     infoObject.position.set(this.center.x, this.center.y + 5, this.center.z);
     this.scene.add(infoObject);
+    this.list.push(infoObject);
+
+    // dom点击 隐藏此建筑物的标签
+    infoDiv.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.clear.call(this);
+    });
+  }
+
+  clear() {
+    this.list.forEach((obj) => (obj.visible = false));
   }
 }
