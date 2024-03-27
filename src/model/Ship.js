@@ -1,5 +1,6 @@
 import { BaseModel } from "@/model/BaseModel.js";
 import * as THREE from "three";
+import { EventBus } from "@/utils/EventBus.js";
 
 export class Ship extends BaseModel {
   init() {
@@ -8,6 +9,7 @@ export class Ship extends BaseModel {
     this.generatorMovePath();
 
     this.isMoveCamera = false;
+    this.onModelAttach();
   }
   // 生成游船行进的路线坐标点集合
   generatorMovePath() {
@@ -102,7 +104,10 @@ export class Ship extends BaseModel {
     if (this.pointIndex < this.pointArr.length - 1) {
       const { x, y, z } = this.pointArr[this.pointIndex + 1];
       if (this.isMoveCamera) {
-        this.camera.lookAt(x, y + 20, z);
+        if (!this.isMouseTouching) {
+          // 鼠标没有被按下时，才设置摄像机的look at
+          this.camera.lookAt(x, y + 20, z);
+        }
         this.camera.position.set(x, y + 20, z);
       }
       // 游船移动
@@ -115,5 +120,34 @@ export class Ship extends BaseModel {
       // 索引归0 重新进入重新继续做坐标取值然后做动画效果
       this.pointIndex = 0;
     }
+  }
+  mousedownFn = () => {
+    this.isMouseTouching = true;
+  };
+  mousemoveFn = (e) => {
+    if (this.isMouseTouching) {
+      // 旋转核心思想：在原有的旋转角度基础上，新增移动的偏移量， ×0.01让旋转弧度降低
+      this.camera.rotateY((this.prePos - e.clientX) * 0.01);
+    }
+    this.prePos = e.clientX;
+  };
+  mouseupFn = () => {
+    this.isMouseTouching = false;
+    this.proPos = undefined; // 清空上一次记录的坐标点位置
+  };
+  // 绑定移除鼠标事件
+  onModelAttach() {
+    // 点击漫游模式绑定或移除鼠标相关事件
+    EventBus.getInstance().on("mode-roaming", (isOpen) => {
+      if (isOpen) {
+        window.addEventListener("mousedown", this.mousedownFn);
+        window.addEventListener("mousemove", this.mousemoveFn);
+        window.addEventListener("mouseup", this.mouseupFn);
+      } else {
+        window.removeEventListener("mousedown", this.mousedownFn);
+        window.removeEventListener("mousemove", this.mousemoveFn);
+        window.removeEventListener("mouseup", this.mouseupFn);
+      }
+    });
   }
 }
