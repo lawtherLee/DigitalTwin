@@ -97,6 +97,11 @@ export class City extends BaseModel {
           accommodate: 500,
           parkingRemain: 88,
         });
+        // new BuildInfo(
+        //   this.scene,
+        //   center,
+        //   this.dataObj.buildingsIntroduce[object.name],
+        // );
       });
     });
   }

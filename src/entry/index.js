@@ -9,6 +9,8 @@ import { EffectManager } from "@/utils/EffectManager.js";
 import { ClickHandler } from "@/utils/ClickHandler.js";
 import { Fly } from "@/model/Fly.js";
 import { EventBus } from "@/utils/EventBus.js";
+import { DataManager } from "@/utils/DataManager.js";
+
 let scene, camera, renderer, control, css2Renderer;
 
 // 初始化 3d 基本环境
@@ -90,10 +92,11 @@ window.addEventListener("DOMContentLoaded", function () {
     "nz.jpg",
   ]);
 
-  loadManager(["fbx/city.fbx", "gltf/ship.glb"], (modelList) => {
-    modelList.forEach((model) => {
+  loadManager(["fbx/city.fbx", "gltf/ship.glb"], async (modelList) => {
+    for (const model of modelList) {
       if (model.url === "fbx/city.fbx") {
-        new City(model.model, scene, camera, control);
+        const city = new City(model.model, scene, camera, control);
+        // city.dataObj = await DataManager.getInstance().getData()
       } else if (model.url === "gltf/ship.glb") {
         const ship = new Ship(model.model, scene, camera, control);
         ship.model.position.set(150, 0, -80);
@@ -106,7 +109,7 @@ window.addEventListener("DOMContentLoaded", function () {
           ship.isMoveCamera = isOpen; // 摄像机跟随移动
         });
       }
-    });
+    }
 
     // 生成飞行器对象
     const meshObj = new THREE.Mesh(
@@ -122,6 +125,9 @@ window.addEventListener("DOMContentLoaded", function () {
       fly.control.enabled = !isOpen;
       fly.isCameraMove = isOpen;
     });
+
+    // 每15秒请求数据
+    DataManager.getInstance().refreshData();
   });
 
   renderLoop();

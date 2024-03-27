@@ -4,3 +4,4 @@ import "./styles/all.less";
 import "@/entry";
 // 菜单
 import "@/dom/menu.js";
+import "@/charts";
