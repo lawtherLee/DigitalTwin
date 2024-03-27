@@ -29,6 +29,7 @@ export class FireBall {
     sphere.position.set(this.center.x, 0, this.center.z);
     this.scene.add(sphere);
     this.nowMesh = sphere;
+    this.nowMesh.scale.set(0, 0, 0); // 缩小成不显示，后续做动效再出现
   }
   // 动效
   onTick() {
@@ -38,5 +39,11 @@ export class FireBall {
     } else {
       this.nowScale = 0;
     }
+  }
+
+  clear() {
+    this.nowMesh.geometry.dispose();
+    this.nowMesh.material.dispose();
+    this.scene.remove(this.nowMesh);
   }
 }

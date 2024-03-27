@@ -123,6 +123,14 @@ window.addEventListener("DOMContentLoaded", function () {
           });
           city.lastClick = targetBuild; // 上一次点击的小物体对象
         });
+
+        // 监听自定义刷新数据事件，实现火灾标记切换
+        EventBus.getInstance().on("refreshHomeCount", (data) => {
+          const buildName = data.fireBuilding.name;
+          if (buildName) {
+            city.initFire(buildName);
+          }
+        });
       } else if (model.url === "gltf/ship.glb") {
         const ship = new Ship(model.model, scene, camera, control);
         ship.model.position.set(150, 0, -80);

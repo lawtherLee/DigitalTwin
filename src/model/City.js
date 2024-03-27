@@ -78,10 +78,18 @@ export class City extends BaseModel {
   initFire(buildName) {
     const build = this.model.getObjectByName(buildName);
     const { center, size } = getBoxCenter(build);
-    new Fire(this.scene, center, size);
+    const fire = new Fire(this.scene, center, size);
     const ball = new FireBall(this.scene, center);
     // 注册动效管理
     EffectManager.getInstance().addObj(ball);
+    // 过了 15 秒以后清除标记
+    // setTimeout(() => {
+    //   fire.clear();
+    //   ball.clear();
+    //
+    //   // 移除动效
+    //   EffectManager.getInstance().removeObj(ball);
+    // }, 15000);
   }
 
   // 中心4个建筑绑定点击事件
