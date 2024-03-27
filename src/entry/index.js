@@ -10,6 +10,7 @@ import { ClickHandler } from "@/utils/ClickHandler.js";
 import { Fly } from "@/model/Fly.js";
 import { EventBus } from "@/utils/EventBus.js";
 import { DataManager } from "@/utils/DataManager.js";
+import { modifySelectCityMaterial } from "@/shader/modifyCityMaterial.js";
 
 let scene, camera, renderer, control, css2Renderer;
 
@@ -97,6 +98,31 @@ window.addEventListener("DOMContentLoaded", function () {
       if (model.url === "fbx/city.fbx") {
         const city = new City(model.model, scene, camera, control);
         // city.dataObj = await DataManager.getInstance().getData()
+
+        // 监听自定义饼状图事件，让模型高亮
+        city.lastOriginMat = []; // 上一次高亮物体本来的材质
+        EventBus.getInstance().on("pieClick", (buildName) => {
+          // 如果有上一个物体，先把上一个物体的材质恢复一下
+          let index = 0;
+          if (city.lastClick && city.lastOriginMat.length > 0) {
+            city.lastClick.traverse((model) => {
+              model.material = city.lastOriginMat[index++];
+            });
+          }
+
+          // 设置当前点击的物体的高亮材质
+          const targetBuild = city.model.getObjectByName(buildName);
+          targetBuild.traverse((model) => {
+            if (model.type === "Mesh") {
+              city.lastOriginMat.push(model.material); // 保留小物体中每个细节物体的材质对象
+              model.material = new THREE.MeshBasicMaterial({
+                color: 0x0000ff,
+              });
+              modifySelectCityMaterial(model); // 再给选中的小物体边线再设置上去
+            }
+          });
+          city.lastClick = targetBuild; // 上一次点击的小物体对象
+        });
       } else if (model.url === "gltf/ship.glb") {
         const ship = new Ship(model.model, scene, camera, control);
         ship.model.position.set(150, 0, -80);
